@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# show lines containing bash word,
+# disable shell check=SC2009
+
+ps -a ux | grep bash

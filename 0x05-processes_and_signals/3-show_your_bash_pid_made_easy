@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#displays PID, along with process name
+#+ processes the word bash in their names
+
+pgrep -l bash
