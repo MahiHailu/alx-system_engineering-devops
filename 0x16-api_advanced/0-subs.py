@@ -1,27 +1,35 @@
 #!/usr/bin/python3
-"""
-number of subscribers for a given subreddit
+"""Queries the Reddit API and returns the number of subscribers
+(not active users, total subscribers) for a given subreddit.
 """
 
-from requests import get
-
+import requests
 
 def number_of_subscribers(subreddit):
     """
-    function that queries the Reddit API and returns the number of subscribers
-    (not active users, total subscribers) for a given subreddit.
+    Get the number of subscribers for a given subreddit.
+
+    Args:
+    subreddit (str): The name of the subreddit.
+
+    Returns:
+    int: The number of subscribers, or 0 if the subreddit is invalid.
     """
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+    }
 
-    if subreddit is None or not isinstance(subreddit, str):
-        return 0
-
-    user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
-    response = get(url, headers=user_agent)
-    results = response.json()
+    url = f'https://www.reddit.com/r/{subreddit}/about.json'
 
     try:
-        return results.get('data').get('subscribers')
+        response = requests.get(url, headers=headers, allow_redirects=False)
 
-    except Exception:
+        if response.status_code == 200:
+            json_data = response.json()
+            data_dict = json_data.get('data')
+            return data_dict.get('subscribers')
+        else:
+            return 0
+    except requests.RequestException as e:
+        print(f"Error: {e}")
         return 0
